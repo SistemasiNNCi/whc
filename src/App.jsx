@@ -1,6 +1,6 @@
 import { useState } from "react";
-import DiagnosticoModal from "./modales/diagnostico";
-import GananciaModal from "./modales/ganancia";
+import DiagnosticoModal from "./pages/formularios/diagnostico/diagnostico";
+import GananciaModal from "./pages/formularios/ganancia/ganancia";
 
 function App() {
   const [open, setOpen] = useState(null);
