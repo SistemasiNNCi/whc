@@ -1,5 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "@emotion/styled";
+import BtnGenerico from "../../../../componentes/generales/btnGenerico";
+import InputGenerico from "../../../../componentes/generales/inputGenerico";
+import ContenedorFormulario from "../../../../componentes/formularios/contenedorFormulario";
 
 /* COLORES */
 const AZUL_TITULO = "#002653";
@@ -25,43 +28,6 @@ const PARAM_LABELS = [
 ];
 
 /* Layout modal */
-const Fondo = styled.div`
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-`;
-
-const ContenedorModal = styled.div`
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-  position: relative;
-
-  width: 590px;
-  max-width: 92vw;
-  min-height: 777px;
-
-  padding: 24px;
-  font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-`;
-
-const BotonCerrar = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-
-  border: none;
-  background: none;
-  color: ${AZUL_TITULO};
-
-  border-radius: 6px;
-  cursor: pointer;
-  padding: 6px 10px;
-`;
 
 /* Encabezado */
 const Encabezado = styled.div`
@@ -102,29 +68,6 @@ const Etiqueta = styled.label`
   font-weight: 800;
   font-size: 15px;
   margin: 0 0 6px;
-`;
-
-const Entrada = styled.input`
-  width: 565px;
-  max-width: 100%;
-  height: 39px;
-  padding: 0 12px;
-  border: 1px solid ${BORDE};
-  border-radius: 8px;
-  outline: none;
-
-  font-size: 15px;
-  font-weight: 400;
-  color: #010101;
-
-  &::placeholder {
-    color: #010101;
-    opacity: 0.65;
-  }
-
-  &:focus {
-    border-color: ${AZUL_TITULO};
-  }
 `;
 
 const EtiquetaParametro = styled.label`
@@ -191,38 +134,15 @@ const Fila2 = styled.div`
 
 /* Pie de pagina */
 const Pie = styled.div`
-  position: absolute;
-  bottom: 15px;       
-  left: 0;
-  width: 100%;
+  position: static;
   display: flex;
   justify-content: center;
 `;
 
-const BotonPrincipal = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-
-  background: #F2C08D;
-  border: none;
-  border-radius: 12px;
-
-  height: 40px;
-  padding: 0 18px;
-  cursor: pointer;
-
-  color: ${AZUL_TITULO};
-  font-weight: 800;
-  font-size: 11px;
-  letter-spacing: 0.4px;
-`;
-
-/* Contenedores semánticos */
-const ContenedorLayout = styled.div``;            
-const ContenedorDatosGenerales = styled.div``;     
-const ContenedorSelectores = styled.div``;         
-const ContenedorNumericos = styled.div``;          
+const ContenedorLayout = styled.div``;
+const ContenedorDatosGenerales = styled.div``;
+const ContenedorSelectores = styled.div``;
+const ContenedorNumericos = styled.div``;
 const ContenedorParametrosSelect = styled.div``;
 const ContenedorParametrosNumericos = styled.div``;
 
@@ -243,166 +163,154 @@ function ParametroSelect({ titulo, valor = "DESEABLE", onChange }) {
   );
 }
 
-export default function ModalDiagnostico({ onClose }) {
+export default function Diagnostico() {
   const [paso, setPaso] = useState(1);
 
-  useEffect(() => {
-    const handler = (e) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", handler);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.removeEventListener("keydown", handler); document.body.style.overflow = prev; };
-  }, [onClose]);
-
   return (
-    <Fondo onClick={onClose} role="dialog">
-      <ContenedorModal onClick={(e) => e.stopPropagation()}>
-        <BotonCerrar onClick={onClose} aria-label="Cerrar">✕</BotonCerrar>
+    <ContenedorFormulario>
+      <Encabezado>
+        <Titulo>DIAGNOSTICA TU INVERSIÓN</Titulo>
+        <Subtitulo>COMPLETA ESTE DIAGNÓSTICO PARA AYUDARTE A ENCONTRAR LAS PROPIEDADES QUE MEJOR SE AJUSTEN A TU PERFIL COMO INVERSIONISTA.</Subtitulo>
+      </Encabezado>
 
-        <Encabezado>
-          <Titulo>DIAGNOSTICA TU INVERSIÓN</Titulo>
-          <Subtitulo>COMPLETA ESTE DIAGNÓSTICO PARA AYUDARTE A ENCONTRAR LAS PROPIEDADES QUE MEJOR SE AJUSTEN A TU PERFIL COMO INVERSIONISTA.</Subtitulo>
-        </Encabezado>
-
-        {paso === 1 && (
-          <ContenedorLayout>
-            {/* 1) Datos generales */}
-            <ContenedorDatosGenerales>
-              <Grupo>
-                <Etiqueta>PSEUDÓNIMO</Etiqueta>
-                <Entrada placeholder="PUEDE SER UN NOMBRE, APODO, ETC..." />
-              </Grupo>
-
-              <Grupo>
-                <Etiqueta>NÚMERO DE TELÉFONO/CELULAR</Etiqueta>
-                <Entrada placeholder="INGRESA UN NUMERO DE CONTACTO" type="tel" />
-              </Grupo>
-
-              <Grupo>
-                <Etiqueta>CORREO ELECTRÓNICO</Etiqueta>
-                <Entrada placeholder="INGRESA UN CORREO DE CONTACTO" type="email" />
-              </Grupo>
-
-              <Grupo>
-                <Etiqueta>UBICACIÓN</Etiqueta>
-                <Entrada placeholder="¿EN QUÉ ESTADO TE INTERESA BUSCAR?" />
-              </Grupo>
-            </ContenedorDatosGenerales>
-
-            {/* 2) Botones desplegables */}
-            <ContenedorSelectores>
-              <Grupo>
-                <Fila3>
-                  <div>
-                    <Etiqueta>TIPO PROPIEDAD</Etiqueta>
-                    <Select defaultValue="OFICINA">
-                      <option>OFICINA</option>
-                      <option>CASA</option>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Etiqueta>OBJETIVO</Etiqueta>
-                    <Select defaultValue="VENDER">
-                      <option>VENDER</option>
-                      <option>RENTAR</option>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Etiqueta>USO DE SUELO</Etiqueta>
-                    <Select defaultValue="VACACIÓN">
-                      <option>VACACIÓN</option>
-                      <option>TRABAJO</option>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Etiqueta>CONDICIÓN</Etiqueta>
-                    <Select defaultValue="NUEVO">
-                      <option>NUEVO</option>
-                      <option>USADO</option>
-                    </Select>
-                  </div>
-                </Fila3>
-              </Grupo>
-            </ContenedorSelectores>
-
-            {/* 3) Datos numéricos */}
-            <ContenedorNumericos>
-              <Grupo>
-                <Etiqueta>SUPERFICIE</Etiqueta>
-                <Fila2>
-                  <Entrada placeholder="DESDE" type="number" inputMode="numeric" />
-                  <Entrada placeholder="HASTA" type="number" inputMode="numeric" />
-                </Fila2>
-              </Grupo>
-
-              <Grupo>
-                <Etiqueta>PRESUPUESTO</Etiqueta>
-                <Fila2>
-                  <Entrada placeholder="DESDE" type="number" inputMode="numeric" />
-                  <Entrada placeholder="HASTA" type="number" inputMode="numeric" />
-                </Fila2>
-              </Grupo>
-            </ContenedorNumericos>
-
-            {/* 4) Pie */}
-            <Pie>
-              <BotonPrincipal onClick={() => setPaso(2)}>
-                <span style={{ fontSize: 18, lineHeight: 0 }}>➜</span>
-                <span>SIGUIENTE</span>
-              </BotonPrincipal>
-            </Pie>
-          </ContenedorLayout>
-        )}
-
-        {paso === 2 && (
-          <>
+      {paso === 1 && (
+        <ContenedorLayout>
+          {/* 1) Datos generales */}
+          <ContenedorDatosGenerales>
             <Grupo>
-              <Etiqueta>PARÁMETROS</Etiqueta>
+              <Etiqueta>PSEUDÓNIMO</Etiqueta>
+              <InputGenerico placeholder="PUEDE SER UN NOMBRE, APODO, ETC..." />
             </Grupo>
 
-            {/* 1) Botones desplegables (15) */}
-            <ContenedorParametrosSelect>
+            <Grupo>
+              <Etiqueta>NÚMERO DE TELÉFONO/CELULAR</Etiqueta>
+              <InputGenerico placeholder="INGRESA UN NUMERO DE CONTACTO" type="tel" />
+            </Grupo>
+
+            <Grupo>
+              <Etiqueta>CORREO ELECTRÓNICO</Etiqueta>
+              <InputGenerico placeholder="INGRESA UN CORREO DE CONTACTO" type="email" />
+            </Grupo>
+
+            <Grupo>
+              <Etiqueta>UBICACIÓN</Etiqueta>
+              <InputGenerico placeholder="¿EN QUÉ ESTADO TE INTERESA BUSCAR?" />
+            </Grupo>
+          </ContenedorDatosGenerales>
+
+          {/* 2) Botones desplegables */}
+          <ContenedorSelectores>
+            <Grupo>
+              <Fila3>
+                <div>
+                  <Etiqueta>TIPO PROPIEDAD</Etiqueta>
+                  <Select defaultValue="OFICINA">
+                    <option>OFICINA</option>
+                    <option>CASA</option>
+                  </Select>
+                </div>
+
+                <div>
+                  <Etiqueta>OBJETIVO</Etiqueta>
+                  <Select defaultValue="VENDER">
+                    <option>VENDER</option>
+                    <option>RENTAR</option>
+                  </Select>
+                </div>
+
+                <div>
+                  <Etiqueta>USO DE SUELO</Etiqueta>
+                  <Select defaultValue="VACACIÓN">
+                    <option>VACACIÓN</option>
+                    <option>TRABAJO</option>
+                  </Select>
+                </div>
+
+                <div>
+                  <Etiqueta>CONDICIÓN</Etiqueta>
+                  <Select defaultValue="NUEVO">
+                    <option>NUEVO</option>
+                    <option>USADO</option>
+                  </Select>
+                </div>
+              </Fila3>
+            </Grupo>
+          </ContenedorSelectores>
+
+          {/* 3) Datos numéricos */}
+          <ContenedorNumericos>
+            <Grupo>
+              <Etiqueta>SUPERFICIE</Etiqueta>
+              <Fila2>
+                <InputGenerico placeholder="DESDE" type="number" inputMode="numeric" />
+                <InputGenerico placeholder="HASTA" type="number" inputMode="numeric" />
+              </Fila2>
+            </Grupo>
+
+            <Grupo>
+              <Etiqueta>PRESUPUESTO</Etiqueta>
+              <Fila2>
+                <InputGenerico placeholder="DESDE" type="number" inputMode="numeric" />
+                <InputGenerico placeholder="HASTA" type="number" inputMode="numeric" />
+              </Fila2>
+            </Grupo>
+          </ContenedorNumericos>
+
+          {/* 4) Pie */}
+          <Pie>
+            <BtnGenerico onClick={() => setPaso(2)}>
+              <span style={{ fontSize: 18, lineHeight: 0 }}>➜</span>
+              <span>SIGUIENTE</span>
+            </BtnGenerico>
+          </Pie>
+        </ContenedorLayout>
+      )}
+
+      {paso === 2 && (
+        <>
+          <Grupo>
+            <Etiqueta>PARÁMETROS</Etiqueta>
+          </Grupo>
+
+          {/* 1) Botones desplegables (15) */}
+          <ContenedorParametrosSelect>
+            <GridParametros>
+              {PARAM_LABELS.map((label) => (
+                <ParametroSelect key={label} titulo={label} />
+              ))}
+            </GridParametros>
+          </ContenedorParametrosSelect>
+
+          {/* 2) Botones numéricos  */}
+          <ContenedorParametrosNumericos>
+            <Grupo style={{ marginTop: 16 }}>
               <GridParametros>
-                {PARAM_LABELS.map((label) => (
-                  <ParametroSelect key={label} titulo={label} />
-                ))}
+                <div>
+                  <EtiquetaParametro>HABITACIONES</EtiquetaParametro>
+                  <EntradaNumero type="number" min="0" placeholder="0" inputMode="numeric" />
+                </div>
+                <div>
+                  <EtiquetaParametro>NIVELES</EtiquetaParametro>
+                  <EntradaNumero type="number" min="0" placeholder="0" inputMode="numeric" />
+                </div>
+                <div>
+                  <EtiquetaParametro>BAÑOS</EtiquetaParametro>
+                  <EntradaNumero type="number" min="0" placeholder="0" inputMode="numeric" />
+                </div>
               </GridParametros>
-            </ContenedorParametrosSelect>
+            </Grupo>
+          </ContenedorParametrosNumericos>
 
-            {/* 2) Botones numéricos  */}
-            <ContenedorParametrosNumericos>
-              <Grupo style={{ marginTop: 16 }}>
-                <GridParametros>
-                  <div>
-                    <EtiquetaParametro>HABITACIONES</EtiquetaParametro>
-                    <EntradaNumero type="number" min="0" placeholder="0" inputMode="numeric" />
-                  </div>
-                  <div>
-                    <EtiquetaParametro>NIVELES</EtiquetaParametro>
-                    <EntradaNumero type="number" min="0" placeholder="0" inputMode="numeric" />
-                  </div>
-                  <div>
-                    <EtiquetaParametro>BAÑOS</EtiquetaParametro>
-                    <EntradaNumero type="number" min="0" placeholder="0" inputMode="numeric" />
-                  </div>
-                </GridParametros>
-              </Grupo>
-            </ContenedorParametrosNumericos>
+          {/* Botón encontrar */}
+          <Pie>
+            <BtnGenerico onClick={() => console.log('ENCONTRAR')}>
+              <span style={{ fontSize: 18, lineHeight: 0 }}>✓</span>
+              <span>ENCONTRAR</span>
+            </BtnGenerico>
+          </Pie>
+        </>
+      )}
 
-            {/* Botón encontrar */}
-            <Pie>
-              <BotonPrincipal onClick={onClose}>
-                <span style={{ fontSize: 18, lineHeight: 0 }}>✓</span>
-                <span>ENCONTRAR</span>
-              </BotonPrincipal>
-            </Pie>
-          </>
-        )}
-
-      </ContenedorModal>
-    </Fondo >
+    </ContenedorFormulario>
   );
 }
