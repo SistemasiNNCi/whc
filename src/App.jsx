@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Diagnostico from "./pages/formularios/diagnostico/diagnostico";
+import "./index.css"
 
 function App() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Formularios para WHC</h1>
       <Diagnostico/>
     </div>
   );
