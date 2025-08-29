@@ -8,7 +8,7 @@ margin-top:14px;
 const Etiqueta = styled.label`
   display:block; 
   color: var(--colorSecundario);
-  font-weight:700; 
+  font-weight:800; 
   font-size:15px; 
   margin:0 0 6px;
 `;
