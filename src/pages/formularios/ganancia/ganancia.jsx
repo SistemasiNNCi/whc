@@ -45,7 +45,7 @@ const TextoModal = styled.p`
   color: #444;
 `;
 
-export default function ModalGanancia({ onClose }) {
+export default function Ganancia({ onClose }) {
   return (
     <FondoModal onClick={onClose}>
       <ContenedorModal onClick={(e) => e.stopPropagation()}>
