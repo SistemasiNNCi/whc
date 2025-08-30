@@ -29,10 +29,13 @@ export default function Home() {
       <Titulo>Formularios para WHC</Titulo>
       <Botonera>
         <BtnGenerico onClick={() => navigate("/formularios/diagnostico")}>
-          Diagnóstico
+          Diagnostica tu inversión
         </BtnGenerico>
         <BtnGenerico onClick={() => navigate("/formularios/ganancia")}>
           Calcula tu ganancia
+        </BtnGenerico>
+        <BtnGenerico onClick={() => navigate("/formularios/conocerte")}>
+          Queremos Conocerte
         </BtnGenerico>
       </Botonera>
     </Wrapper>

@@ -29,7 +29,7 @@ const Logo = styled.img`
 `;
 
 const Main = styled.main`
-  padding: 16px; /* margen del contenido */
+  padding: 16px;
 `;
 
 export default function LayoutGenerico({ children }) {

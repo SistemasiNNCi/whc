@@ -26,9 +26,9 @@ const Contenido = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  min-height: 0;        /* necesario para que el scroll funcione en contenedor flex */
-  overflow-y: auto;     /* si el contenido excede, scrollea solo esta zona */
-  padding-bottom: 12px; /* espacio con el footer */
+  min-height: 0;        
+  overflow-y: auto;     
+  padding-bottom: 12px; 
 `;
 
 const Pie = styled.div`

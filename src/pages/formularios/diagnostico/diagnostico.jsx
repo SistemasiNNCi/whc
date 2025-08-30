@@ -1,126 +1,61 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
 import BtnGenerico from "../../../../componentes/generales/btnGenerico";
-import InputGenerico from "../../../../componentes/generales/inputGenerico";
 import LayoutCuestionario from "../../../../componentes/formularios/layoutFormulario";
-import { PARAMETROS, TIPO_PROPIEDAD, OBJETIVO, USO_SUELO, CONDICION } from "./opcionesDiagnostico";
-import InputFormulario from "../../../../componentes/formularios/inputFormTexto";
+import { SELECTS_PASO1, PARAMETROS, OPCIONES_PARAM } from "./opcionesDiagnostico";
 import InputFormularioTexto from "../../../../componentes/formularios/inputFormTexto";
 import InputFormNumerico from "../../../../componentes/formularios/inputFormNumerico";
+import InputFormDespleg from "../../../../componentes/formularios/inputFormDespleg";
 
-/* Campos*/
 const Grupo = styled.div`
   margin-top: 14px;
 `;
 
-const Etiqueta = styled.label`
-  display: block;
-  color: var(--colorSecundario);
-  font-weight: 800;
-  font-size: 15px;
-  margin: 0 0 6px;
-`;
-
-const EtiquetaParametro = styled.label`
-  display:block;
-  color:#010101;
-  font-weight:400;
-  font-size:15px;
-  margin:0 0 6px;
-`;
-
-const EntradaNumero = styled.input`
-  width: 80px;
-  height: 39px;
-  padding: 0 10px;
-  border: 1px solid #D3D7E0;
-  border-radius: 8px;
-  outline: none;
-  font-size: 15px;
-  color: #010101;
-  &:focus { border-color: var(--colorPrincipal); }
-`;
-
-const GridParametros = styled.div`
+const Grid = styled.div`
   display:grid;
   grid-template-columns: repeat(3, minmax(120px, 1fr));
   gap: 12px;
-  max-width: 514px;
+  max-width: 565px;
   margin: 0 auto;
 `;
 
-const Select = styled.select`
-  width: 180px;
-  max-width: 100%;
-  height: 39px;
-
-  padding: 0 10px;
-  border: 1px solid #D3D7E0;
-  border-radius: 8px;
-  outline: none;
-
-  background: #fff;
-  font-size: 15px;
-  color: #010101;
-
-  &:focus {
-    border-color: var(--colorPrincipal);
-  }
-`;
-
-const Fila3 = styled.div` 
-  display:grid; 
-  grid-template-columns:repeat(3,minmax(120px,1fr)); 
-  gap:12px; 
-  max-width:565px; 
-`;
-
-const Fila2 = styled.div` 
-  display:grid; 
-  grid-template-columns:repeat(2,minmax(160px,1fr)); 
-  gap:12px; 
-  max-width:565px; 
-
-`;
-
-const ContenedorLayout = styled.div``;
-const ContenedorDatosGenerales = styled.div``;
-const ContenedorSelectores = styled.div``;
-const ContenedorNumericos = styled.div``;
-const ContenedorParametrosSelect = styled.div``;
-const ContenedorParametrosNumericos = styled.div``;
-
-function ParametroSelect({ titulo, valor = "DESEABLE", onChange }) {
-  return (
-    <div>
-      <EtiquetaParametro>{titulo}</EtiquetaParametro>
-      <Select
-        defaultValue={valor}
-        onChange={onChange}
-        aria-label={titulo}
-      >
-        <option>ESENCIAL</option>
-        <option>DESEABLE</option>
-        <option>NO APLICA</option>
-      </Select>
-    </div>
-  );
-}
+const initParametros = Object.fromEntries(
+  PARAMETROS.map((p) => [p.id, "DESEABLE"])
+);
 
 export default function Diagnostico() {
   const [paso, setPaso] = useState(1);
   const [form, setForm] = useState({
+    //VISTA 1
     alias: "",
     telefono: "",
     email: "",
     ubicacion: "",
+
+    tipo: SELECTS_PASO1[0].opciones[0],
+    objetivo: SELECTS_PASO1[1].opciones[0],
+    uso: SELECTS_PASO1[2].opciones[0],
+    condicion: SELECTS_PASO1[3].opciones[0],
+
     superficie: { desde: "", hasta: "" },
     presupuesto: { desde: "", hasta: "" },
+
+    //VISTA 2
+    parametros: initParametros,
+    habitaciones: "",
+    niveles: "",
+    banos: "",
+
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
+  };
+
+  // específico para los 15 parámetros
+  const setParametro = (name, value) => {
+    setForm((f) => ({ ...f, parametros: { ...f.parametros, [name]: value } }));
   };
 
   return (
@@ -134,7 +69,7 @@ export default function Diagnostico() {
             <span>SIGUIENTE</span>
           </BtnGenerico>
         ) : (
-          <BtnGenerico onClick={() => console.log('ENCONTRAR')}>
+          <BtnGenerico onClick={() => console.log("Diagnóstico > Paso 2:", form)}>
             <span style={{ fontSize: 18, lineHeight: 0 }}>✓</span>
             <span>ENCONTRAR</span>
           </BtnGenerico>
@@ -142,8 +77,8 @@ export default function Diagnostico() {
       }
     >
       {paso === 1 ? (
-        <ContenedorLayout>
-          <ContenedorDatosGenerales>
+        <>
+          <Grupo>
             <InputFormularioTexto
               titulo="PSEUDÓNIMO"
               name="alias"
@@ -174,43 +109,25 @@ export default function Diagnostico() {
               value={form.ubicacion}
               onChange={handleChange}
             />
-          </ContenedorDatosGenerales>
+          </Grupo>
 
-          <ContenedorSelectores>
-            <Grupo>
-              <Fila3>
-                <div>
-                  <Etiqueta>TIPO PROPIEDAD</Etiqueta>
-                  <Select defaultValue={TIPO_PROPIEDAD[0]}>
-                    {TIPO_PROPIEDAD.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
-                  </Select>
-                </div>
 
-                <div>
-                  <Etiqueta>OBJETIVO</Etiqueta>
-                  <Select defaultValue={OBJETIVO[0]}>
-                    {OBJETIVO.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
-                  </Select>
-                </div>
+          <Grupo>
+            <Grid>
+              {SELECTS_PASO1.map(({ name, titulo, opciones }) => (
+                <InputFormDespleg
+                  key={name}
+                  titulo={titulo}
+                  name={name}
+                  opciones={opciones}
+                  value={form[name]}
+                  onChange={handleChange}
+                />
+              ))}
+            </Grid>
+          </Grupo>
 
-                <div>
-                  <Etiqueta>USO DE SUELO</Etiqueta>
-                  <Select defaultValue={USO_SUELO[0]}>
-                    {USO_SUELO.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
-                  </Select>
-                </div>
-
-                <div>
-                  <Etiqueta>CONDICIÓN</Etiqueta>
-                  <Select defaultValue={CONDICION[0]}>
-                    {CONDICION.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
-                  </Select>
-                </div>
-              </Fila3>
-            </Grupo>
-          </ContenedorSelectores>
-
-          <ContenedorNumericos>
+          <Grupo>
             <InputFormNumerico
               titulo="SUPERFICIE"
               name="superficie"
@@ -223,42 +140,55 @@ export default function Diagnostico() {
               value={form.presupuesto}
               onChange={(next) => setForm((f) => ({ ...f, presupuesto: next }))}
             />
-          </ContenedorNumericos>
-        </ContenedorLayout>
+          </Grupo>
+        </>
       ) : (
         <>
-          <Grupo><Etiqueta>PARÁMETROS</Etiqueta></Grupo>
-
-          <ContenedorParametrosSelect>
-            <GridParametros>
-              {PARAMETROS.map((label) => (
-                <ParametroSelect key={label} titulo={label} />
+          <Grupo>
+            <Grid>
+              {PARAMETROS.map((p) => (
+                <InputFormDespleg
+                  key={p.id}
+                  titulo={p.titulo}
+                  name={p.id}
+                  opciones={OPCIONES_PARAM}
+                  value={form.parametros[p.id]}
+                  onChange={(e) => setParametro(p.id, e.target.value)}
+                />
               ))}
-            </GridParametros>
-          </ContenedorParametrosSelect>
+            </Grid>
+          </Grupo>
 
-          <ContenedorParametrosNumericos>
-            <Grupo style={{ marginTop: 16 }}>
-              <GridParametros>
-                <div>
-                  <EtiquetaParametro>HABITACIONES</EtiquetaParametro>
-                  <EntradaNumero type="number" min="0" placeholder="0" inputMode="numeric" />
-                </div>
-                <div>
-                  <EtiquetaParametro>NIVELES</EtiquetaParametro>
-                  <EntradaNumero type="number" min="0" placeholder="0" inputMode="numeric" />
-                </div>
-                <div>
-                  <EtiquetaParametro>BAÑOS</EtiquetaParametro>
-                  <EntradaNumero type="number" min="0" placeholder="0" inputMode="numeric" />
-                </div>
-              </GridParametros>
-            </Grupo>
-          </ContenedorParametrosNumericos>
+          <Grupo style={{ marginTop: 16 }}>
+            <Grid>
+              <InputFormularioTexto
+                titulo="HABITACIONES"
+                name="habitaciones"
+                type="number"
+                placeholder="0"
+                value={form.habitaciones}
+                onChange={handleChange}
+              />
+              <InputFormularioTexto
+                titulo="NIVELES"
+                name="niveles"
+                type="number"
+                placeholder="0"
+                value={form.niveles}
+                onChange={handleChange}
+              />
+              <InputFormularioTexto
+                titulo="BAÑOS"
+                name="banos"
+                type="number"
+                placeholder="0"
+                value={form.banos}
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grupo>
         </>
       )}
     </LayoutCuestionario>
   );
-
-
 }
