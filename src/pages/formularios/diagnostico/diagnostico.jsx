@@ -6,6 +6,7 @@ import { SELECTS_PASO1, PARAMETROS, OPCIONES_PARAM } from "./opcionesDiagnostico
 import InputFormularioTexto from "../../../../componentes/formularios/inputFormTexto";
 import InputFormNumerico from "../../../../componentes/formularios/inputFormNumerico";
 import InputFormDespleg from "../../../../componentes/formularios/inputFormDespleg";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Grupo = styled.div`
   margin-top: 14px;
@@ -144,6 +145,18 @@ export default function Diagnostico() {
         </>
       ) : (
         <>
+          <ArrowBackIcon
+            onClick={() => setPaso(1)}
+            style={{
+              position: "absolute",
+              left: "16px",
+              top: "32px",
+              cursor: "pointer",
+              color: "black",
+              fontSize: 28,
+              "&:hover": { color: "var(--colorSecundario)", transform: "scale(1.1)" }
+            }}
+          />
           <Grupo>
             <Grid>
               {PARAMETROS.map((p) => (

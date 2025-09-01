@@ -3,24 +3,12 @@ import { useState, useMemo } from "react";
 import styled from "@emotion/styled";
 import LayoutCuestionario from "../../../../componentes/formularios/layoutFormulario";
 import InputFormularioTexto from "../../../../componentes/formularios/inputFormTexto";
-
+import { TxtGenerico } from "../../../../componentes/generales/txtGenerico";
 import BtnGenerico from "../../../../componentes/generales/btnGenerico";
 import InputFormDespleg from "../../../../componentes/formularios/inputFormDespleg";
-
-const TxtGenerico = styled.p`
-  opacity: 0.85;
-  font-size: 14px;
-  line-height: 1.45;
-  text-transform: uppercase;
-  color: var(--colorPrincipal);
-`;
-
-const Etiqueta = styled.div`
-  font-weight: 700;
-  margin-top: 6px;
-  margin-bottom: 4px;
-  color: var(--colorSecundario);
-`;
+import { SELECTS_CONOCERTE, PREGUNTAS_RADIOGRID } from "./opcionesConocerte";
+import RadioGrid from "../../../../componentes/generales/radioGrid";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Grupo = styled.div`
   margin-top: 14px;
@@ -59,10 +47,27 @@ const Checkbox = styled.label`
 export default function Conocerte() {
     const [paso, setPaso] = useState(1);
     const [form, setForm] = useState({
+        //VISTA 1
         alias: "",
         telefono: "",
         email: "",
         autorizo: false,
+
+        //VISTA 2
+        edad: "",
+        estudios: "",
+        rangoOcupantes: "",
+        mascotas: "",
+        finanzas: "",
+        sueloRelajarme: "",
+        motivaInvertir: {},
+        distribucionIngresos: {},
+        zonasPreferencia: {},
+        localidadesPreferencia: {},
+        estacionesPreferidas: {},
+        masImportante: {},
+        ambientePreferido: {},
+        estilosArquitectonicos: {},
     });
 
     const handleChange = (e) => {
@@ -70,7 +75,14 @@ export default function Conocerte() {
         setForm((f) => ({ ...f, [name]: value }));
     };
 
-    const validoPaso1 = useMemo(() => {
+    const handleRadioGridChange = (nombre, fila, col) => {
+        setForm((f) => ({
+            ...f,
+            [nombre]: { ...f[nombre], [fila]: col },
+        }));
+    };
+
+    const validarVista1 = useMemo(() => {
         const emailOk = /^\S+@\S+\.\S+$/.test(form.email);
         const telOk = String(form.telefono || "").trim().length > 0;
         return form.alias.trim() !== "" && telOk && emailOk && form.autorizo === true;
@@ -89,13 +101,12 @@ export default function Conocerte() {
             paginasTotales={2}
             footer={
                 paso === 1 ? (
-                    <BtnGenerico onClick={() => setPaso(2)} disabled={!validoPaso1}>
+                    <BtnGenerico onClick={() => setPaso(2)} disabled={!validarVista1}>
                         <span style={{ fontSize: 18, lineHeight: 0 }}>➜</span>
                         <span>SIGUIENTE</span>
                     </BtnGenerico>
                 ) : (
                     <>
-                        <BtnGenerico onClick={() => setPaso(1)}>Anterior</BtnGenerico>
                         <BtnGenerico onClick={enviar}>
                             <span style={{ fontSize: 18, lineHeight: 0 }}>✓</span>
                             <span>TERMINAR</span>
@@ -134,9 +145,8 @@ export default function Conocerte() {
                         </Grupo>
 
                         <Grupo>
-                            <Etiqueta>AUTORIZACIÓN</Etiqueta>
-
-                            <TxtGenerico>
+                            <TxtGenerico size="15px" color="var(--colorSecundario)" uppercase margin="0 0 6px">USO DE DATOS PERSONALES</TxtGenerico>
+                            <TxtGenerico justify>
                                 AUTORIZO A WELCOME HOME CONNECTIONS S.A. DE C.V. A UTILIZAR MIS
                                 DATOS PARA PERSONALIZAR MI EXPERIENCIA, TRATARLOS CON
                                 CONFIDENCIALIDAD Y NO COMPARTIRLOS CON TERCEROS NO RELACIONADOS.
@@ -158,88 +168,49 @@ export default function Conocerte() {
                     </Grid>
                 </>
             )}
-
             {paso === 2 && (
                 <>
-                    <Grid2>
-                        <Grupo>
-                            <Etiqueta>Edad</Etiqueta>
-                            <InputFormDespleg
-                                name="edad"
-                                value={form.edad}
-                                onChange={handleChange}
-                                opciones={[
-                                    "18 a 29",
-                                    "30 a 44",
-                                    "45 a 54",
-                                    "55 a 64",
-                                    "65+"
-                                ]}
+                    <ArrowBackIcon
+                        onClick={() => setPaso(1)}
+                        style={{
+                            position: "absolute",
+                            left: "16px",
+                            top: "32px",
+                            cursor: "pointer",
+                            color: "black",
+                            fontSize: 28,
+                            "&:hover": { color: "var(--colorSecundario)", transform: "scale(1.1)" }
+                        }}
+                    />
+                    <Grupo>
+                        <Grid2>
+                            {SELECTS_CONOCERTE.map(({ name, titulo, opciones }) => (
+                                <InputFormDespleg
+                                    key={name}
+                                    titulo={titulo}
+                                    name={name}
+                                    value={form[name]}
+                                    onChange={handleChange}
+                                    opciones={opciones}
+                                />
+                            ))}
+                        </Grid2>
+                    </Grupo>
+                    <Grupo>
+                        {PREGUNTAS_RADIOGRID.map((preg) => (
+                            <RadioGrid
+                                key={preg.nombre}
+                                titulo={preg.titulo}
+                                name={preg.nombre}
+                                columnas={preg.columnas}
+                                filas={preg.filas}
+                                value={form[preg.nombre] || {}}
+                                onChange={handleRadioGridChange}
                             />
-                        </Grupo>
-
-                        <Grupo>
-                            <Etiqueta>Estudios</Etiqueta>
-                            <InputFormDespleg
-                                name="estudios"
-                                value={form.estudios}
-                                onChange={handleChange}
-                                opciones={[
-                                    "Básica",
-                                    "Media Superior",
-                                    "Superior",
-                                    "No aplica"
-                                ]}
-                            />
-                        </Grupo>
-
-                        <Grupo>
-                            <Etiqueta>Rango Ocupantes</Etiqueta>
-                            <InputFormDespleg
-                                name="rangoOcupantes"
-                                value={form.rangoOcupantes}
-                                onChange={handleChange}
-                                opciones={[
-                                    "1 a 5",
-                                    "6 a 10",
-                                    "10+"
-                                ]}
-                            />
-                        </Grupo>
-
-                        <Grupo>
-                            <Etiqueta>Mascotas</Etiqueta>
-                            <InputFormDespleg
-                                name="mascotas"
-                                value={form.mascotas}
-                                onChange={handleChange}
-                                opciones={[
-                                    "Exóticos",
-                                    "Domésticos",
-                                    "Silvestres",
-                                    "No aplica"
-                                ]}
-                            />
-                        </Grupo>
-
-                        <Grupo>
-                            <Etiqueta>Finanzas</Etiqueta>
-                            <InputFormDespleg
-                                name="finanzas"
-                                value={form.finanzas}
-                                onChange={handleChange}
-                                opciones={[
-                                    "Próspera",
-                                    "Igual",
-                                    "Cautelosa",
-                                    "Recuperación",
-                                    "Conflicto"
-                                ]}
-                            />
-                        </Grupo>
-
-                    </Grid2>
+                        ))}
+                    </Grupo>
                 </>
+
             )}
         </LayoutCuestionario>
     );
