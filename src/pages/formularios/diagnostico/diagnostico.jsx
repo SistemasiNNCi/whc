@@ -24,6 +24,15 @@ const initParametros = Object.fromEntries(
   PARAMETROS.map((p) => [p.id, "DESEABLE"])
 );
 
+const handleSubmit = (e) => {
+  const data = 23;
+  fetch("https://script.google.com/a/macros/inncilab.com/s/AKfycbwRB5biJ4UAd2nJsofSxCtuBqtASq1RCrYukbtPuUiADGrR0UQ0W0oDQLxXi6Oj0c4fgg/exec", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" }
+  }).then(() => console.log("Formulario enviado"));
+}
+
 export default function Diagnostico() {
   const [paso, setPaso] = useState(1);
   const [form, setForm] = useState({
@@ -65,7 +74,7 @@ export default function Diagnostico() {
       subtitulo="COMPLETA ESTE DIAGNÓSTICO PARA AYUDARTE A ENCONTRAR LAS PROPIEDADES QUE MEJOR SE AJUSTEN A TU PERFIL COMO INVERSIONISTA."
       footer={
         paso === 1 ? (
-          <BtnGenerico onClick={() => { console.log("Diagnóstico > Paso 1:", form); setPaso(2); }}>
+          <BtnGenerico onClick={() => { handleSubmit(); setPaso(2); }}>
             <span style={{ fontSize: 18, lineHeight: 0 }}>➜</span>
             <span>SIGUIENTE</span>
           </BtnGenerico>
