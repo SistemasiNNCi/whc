@@ -7,6 +7,7 @@ import InputFormularioTexto from "../../../../componentes/formularios/inputFormT
 import InputFormNumerico from "../../../../componentes/formularios/inputFormNumerico";
 import InputFormDespleg from "../../../../componentes/formularios/inputFormDespleg";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Swal from "sweetalert2";
 
 const Grupo = styled.div`
   margin-top: 14px;
@@ -24,14 +25,29 @@ const initParametros = Object.fromEntries(
   PARAMETROS.map((p) => [p.id, "DESEABLE"])
 );
 
-const handleSubmit = (e) => {
-  const data = 23;
-  fetch("https://script.google.com/a/macros/inncilab.com/s/AKfycbwRB5biJ4UAd2nJsofSxCtuBqtASq1RCrYukbtPuUiADGrR0UQ0W0oDQLxXi6Oj0c4fgg/exec", {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" }
-  }).then(() => console.log("Formulario enviado"));
-}
+const handleSubmit = async (form) => {
+  try {
+    await fetch("https://script.google.com/macros/s/AKfycbyrOqL3EtBWLgQOR8PAVuWwL30PxJC9a3Peq20Em2lGDCd4gAsBRdHLb0SJqxaeomaskA/exec", {
+      method: "POST",
+      body: JSON.stringify(form),
+      headers: { "Content-Type": "application/json" }
+    });
+
+    Swal.fire({
+      title: "Enviado",
+      text: "Tu diagnóstico fue enviado correctamente",
+      icon: "success",
+      confirmButtonText: "Aceptar"
+    });
+  } catch (error) {
+    Swal.fire({
+      title: "Error",
+      text: "Hubo un problema al enviar tu formulario",
+      icon: "error",
+      confirmButtonText: "Reintentar"
+    });
+  }
+};
 
 export default function Diagnostico() {
   const [paso, setPaso] = useState(1);
@@ -74,12 +90,12 @@ export default function Diagnostico() {
       subtitulo="COMPLETA ESTE DIAGNÓSTICO PARA AYUDARTE A ENCONTRAR LAS PROPIEDADES QUE MEJOR SE AJUSTEN A TU PERFIL COMO INVERSIONISTA."
       footer={
         paso === 1 ? (
-          <BtnGenerico onClick={() => { handleSubmit(); setPaso(2); }}>
+          <BtnGenerico onClick={() => setPaso(2)}>
             <span style={{ fontSize: 18, lineHeight: 0 }}>➜</span>
             <span>SIGUIENTE</span>
           </BtnGenerico>
         ) : (
-          <BtnGenerico onClick={() => console.log("Diagnóstico > Paso 2:", form)}>
+          <BtnGenerico onClick={() => handleSubmit(form)}>
             <span style={{ fontSize: 18, lineHeight: 0 }}>✓</span>
             <span>ENCONTRAR</span>
           </BtnGenerico>
