@@ -27,25 +27,24 @@ const initParametros = Object.fromEntries(
 
 const handleSubmit = async (form) => {
   try {
-    await fetch("https://script.google.com/macros/s/AKfycbyrOqL3EtBWLgQOR8PAVuWwL30PxJC9a3Peq20Em2lGDCd4gAsBRdHLb0SJqxaeomaskA/exec", {
+    await fetch("https://script.google.com/macros/s/AKfycbyNrRXNgc8qzj-i_5qeaKVsTcML8nPD16Tq9G6Yxpaqory6BNj750B4_oz4cuEc7GRWnw/exec", {
       method: "POST",
+      mode: "no-cors",                    
       body: JSON.stringify(form),
       headers: { "Content-Type": "application/json" }
     });
-
-    Swal.fire({
-      title: "Enviado",
-      text: "Tu diagnóstico fue enviado correctamente",
-      icon: "success",
-      confirmButtonText: "Aceptar"
-    });
+    
+    Swal.fire(
+      {
+        title: "Enviado",
+        text: "Tu diagnóstico fue enviado correctamente", icon: "success"
+      });
   } catch (error) {
-    Swal.fire({
-      title: "Error",
-      text: "Hubo un problema al enviar tu formulario",
-      icon: "error",
-      confirmButtonText: "Reintentar"
-    });
+    Swal.fire(
+      {
+        title: "Error",
+        text: "Hubo un problema al enviar tu formulario", icon: "error"
+      });
   }
 };
 
